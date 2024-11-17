@@ -1,27 +1,32 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CurrencyRepository {
   final Dio _dio = Dio();
   final SharedPreferences _prefs;
-  static const String API_KEY = 'YOUR_API_KEY'; // Replace with your API key
-  static const String BASE_URL = 'https://api.exchangerate-api.com/v4/latest/';
+  static String API_KEY =
+      '${dotenv.env['Exchange_Rate_Api']}'; // Replace with your API key
+  static String BASE_URL =
+      'https://v6.exchangerate-api.com/v6/${API_KEY}/latest/';
   static const String PREFERRED_CURRENCIES_KEY = 'preferred_currencies';
 
   CurrencyRepository(this._prefs);
 
-  Future<Map<String, double>> getExchangeRates(String baseCurrency) async {
+  Future<Map<String, dynamic>> getExchangeRates(String baseCurrency) async {
     try {
       final response = await _dio.get('$BASE_URL$baseCurrency');
-      return Map<String, double>.from(response.data['rates']);
+      print(response.data['conversion_rates'].runtimeType);
+      return Map<String, dynamic>.from(response.data['conversion_rates']);
     } catch (e) {
+      print(e);
       throw Exception('Failed to fetch exchange rates');
     }
   }
 
   Future<List<String>> getPreferredCurrencies() async {
     final currencies = _prefs.getStringList(PREFERRED_CURRENCIES_KEY);
-    return currencies ?? ['EUR', 'USD', 'GBP']; // Default currencies
+    return currencies ?? []; // Default currencies
   }
 
   Future<void> savePreferredCurrencies(List<String> currencies) async {

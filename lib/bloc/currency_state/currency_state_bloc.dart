@@ -9,7 +9,7 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
   final CurrencyRepository repository;
   double _currentAmount = 1.0;
   String _currentBaseCurrency = 'USD';
-  Map<String, double> _currentRates = {};
+  Map<String, dynamic> _currentRates = {};
 
   CurrencyBloc(this.repository) : super(CurrencyInitial()) {
     on<LoadCurrencies>(_onLoadCurrencies);

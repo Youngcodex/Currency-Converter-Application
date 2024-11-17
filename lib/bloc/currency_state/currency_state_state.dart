@@ -8,7 +8,7 @@ final class CurrencyInitial extends CurrencyState {}
 class CurrencyLoading extends CurrencyState {}
 
 class CurrencyLoaded extends CurrencyState {
-  final Map<String, double> rates;
+  final Map<String, dynamic> rates;
   final List<String> preferredCurrencies;
   final double amount;
   final String baseCurrency;
