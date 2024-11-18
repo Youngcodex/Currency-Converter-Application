@@ -1,6 +1,9 @@
 import 'package:currency_converter_application/bloc/currency_state/currency_state_bloc.dart';
+import 'package:currency_converter_application/main.dart';
+import 'package:currency_converter_application/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class CurrencyConverterScreen extends StatelessWidget {
   const CurrencyConverterScreen({super.key});
@@ -8,26 +11,33 @@ class CurrencyConverterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => _showAddCurrencyDialog(context),
+          child: const Icon(Icons.add)),
       appBar: AppBar(
-        title: Text('Currency Converter'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _showAddCurrencyDialog(context),
-          ),
-        ],
+        title: const Text('Currency Converter'),
       ),
       body: BlocBuilder<CurrencyBloc, CurrencyState>(
         builder: (context, state) {
           if (state is CurrencyLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state is CurrencyLoaded) {
             return Column(
               children: [
-                _buildCurrencyInput(context, state),
-                Expanded(child: _buildConversionsList(context, state)),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 100.w,
+                  child: _buildCurrencyInput(context, state),
+                ),
+                Expanded(
+                    child: SizedBox(
+                  width: 93.w,
+                  child: _buildConversionsList(context, state),
+                )),
               ],
             );
           }
@@ -44,36 +54,43 @@ class CurrencyConverterScreen extends StatelessWidget {
 
   Widget _buildCurrencyInput(BuildContext context, CurrencyLoaded state) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextField(
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Amount',
-              border: OutlineInputBorder(),
+          SizedBox(
+            width: 70.w,
+            child: TextField(
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Amount',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                final amount = double.tryParse(value) ?? 0.0;
+                context.read<CurrencyBloc>().add(UpdateAmount(amount));
+              },
             ),
-            onChanged: (value) {
-              final amount = double.tryParse(value) ?? 0.0;
-              context.read<CurrencyBloc>().add(UpdateAmount(amount));
-            },
           ),
-          SizedBox(height: 16.0),
-          DropdownButton<String>(
-            value: state.baseCurrency,
-            items: state.rates.keys.map((String currency) {
-              return DropdownMenuItem<String>(
-                value: currency,
-                child: Text(currency),
-              );
-            }).toList(),
-            onChanged: (String? currency) {
-              if (currency != null) {
-                context.read<CurrencyBloc>().add(
-                      ChangeBaseCurrency(currency),
-                    );
-              }
-            },
+          // SizedBox(height: 16.0),
+          SizedBox(
+            // width: 20.w,
+            child: DropdownButton<String>(
+              value: state.baseCurrency,
+              items: state.rates.keys.map((String currency) {
+                return DropdownMenuItem<String>(
+                  value: currency,
+                  child: Text(currency),
+                );
+              }).toList(),
+              onChanged: (String? currency) {
+                if (currency != null) {
+                  context.read<CurrencyBloc>().add(
+                        ChangeBaseCurrency(currency),
+                      );
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -94,19 +111,45 @@ class CurrencyConverterScreen extends StatelessWidget {
           background: Container(
             color: Colors.red,
             alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(right: 16.0),
-            child: Icon(Icons.delete, color: Colors.white),
+            padding: const EdgeInsets.only(right: 16.0),
+            child: const Icon(Icons.delete, color: Colors.white),
           ),
           onDismissed: (_) {
             context.read<CurrencyBloc>().add(
                   RemovePreferredCurrency(currency),
                 );
           },
-          child: ListTile(
-            title: Text(currency),
-            trailing: Text(
-              convertedAmount.toStringAsFixed(2),
-              style: Theme.of(context).textTheme.titleLarge,
+          child: Container(
+            // height: 10,
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.all(16.0),
+            decoration: darkModeBoxDecoration,
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      currency,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Text(
+                      rate.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  convertedAmount.toStringAsFixed(2),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ],
+              // title: Text(currency),
+              // trailing: Text(
+              //   convertedAmount.toStringAsFixed(2),
+              //   style: Theme.of(context).textTheme.titleLarge,
+              // ),
             ),
           ),
         );

@@ -1,9 +1,11 @@
 import 'package:currency_converter_application/bloc/currency_state/currency_state_bloc.dart';
 import 'package:currency_converter_application/repository/currency_repository.dart';
 import 'package:currency_converter_application/screens/currency_converter_screen.dart';
+import 'package:currency_converter_application/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -26,14 +28,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CurrencyBloc(repository)..add(LoadCurrencies()),
-      child: MaterialApp(
-        title: 'Currency Converter',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: CurrencyConverterScreen(),
-      ),
+      child: ResponsiveSizer(builder: (context, orientation, screenType) {
+        return MaterialApp(
+          title: 'Currency Converter',
+          theme: themeData,
+          home: const CurrencyConverterScreen(),
+        );
+      }),
     );
   }
 }

@@ -16,7 +16,7 @@ class CurrencyRepository {
   Future<Map<String, dynamic>> getExchangeRates(String baseCurrency) async {
     try {
       final response = await _dio.get('$BASE_URL$baseCurrency');
-      print(response.data['conversion_rates'].runtimeType);
+      print(response.data['conversion_rates']);
       return Map<String, dynamic>.from(response.data['conversion_rates']);
     } catch (e) {
       print(e);
