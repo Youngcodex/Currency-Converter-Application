@@ -105,7 +105,11 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## Screenshots 📷
 
-_(Add your app screenshots here to showcase UI features)_
+![Simulator Screenshot - iPhone 15 Pro - 2024-11-18 at 19 34 14](https://github.com/user-attachments/assets/38fdcbbc-0415-49e6-9f64-b84d58505e2d)
+![Simulator Screenshot - iPhone 15 Pro - 2024-11-18 at 19 34 19](https://github.com/user-attachments/assets/cf3b023b-a220-49fe-916a-9e47377b75f8)
+![Simulator Screenshot - iPhone 15 Pro - 2024-11-18 at 19 34 28](https://github.com/user-attachments/assets/16a24c26-497d-4208-8042-abe44f2755c4)
+![Simulator Screenshot - iPhone 15 Pro - 2024-11-18 at 19 34 48](https://github.com/user-attachments/assets/8711db2c-3bd7-4760-b7d4-4d4137ff5c33)
+
 
 ---
 
