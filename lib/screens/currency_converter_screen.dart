@@ -82,7 +82,7 @@ class CurrencyConverterScreen extends StatelessWidget {
                   value: currency,
                   child: Text(currency),
                 );
-              }).toList(),
+              }).toList(),nn
               onChanged: (String? currency) {
                 if (currency != null) {
                   context.read<CurrencyBloc>().add(
